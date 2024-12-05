@@ -15,7 +15,7 @@ const PortalPage = () => {
       {/* Header Section */}
       <div className="portal-header">
         <h1 className="head">Leave Management System</h1>
-        <button className="logout-button" onClick={handleLogout}>
+        <button className="login" onClick={handleLogout}>
           Login
         </button>
       </div>

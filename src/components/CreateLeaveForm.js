@@ -52,15 +52,16 @@ const CreateLeaveForm = () => {
 
   useEffect(() => {
     axios
-      .post("http://localhost:4000/leavecredit")
+      .get("http://localhost:4000/leaveoptions")
       .then((response) => {
-        if (response.data.success === true) {
-          if (response.data.success === true && response.data.leaveOptions) {
-            setLeaveOption(response.data.leaveOptions);
+        if (response.data.success) {
+          setLeaveOption(response.data.leaveOptions);
         }
-      }
-      .catch(() => setLeaveOption([]));
-  }, []); // Dependency array added to ensure this runs only once.
+      })
+      .catch((error) => {
+        console.error("Error fetching leave options:", error);
+      });
+  }, []);
 
   const handleCancel = () => {
     setLeaveType("");
@@ -72,7 +73,6 @@ const CreateLeaveForm = () => {
     navigate("/applicationlist");
   };
 
-  // Get today's date in YYYY-MM-DD format
   const today = new Date().toISOString().split("T")[0];
 
   return (
@@ -81,7 +81,6 @@ const CreateLeaveForm = () => {
       <div className="form-content">
         <h2>Create New Leave</h2>
         <form>
-          {/* Leave Type */}
           <div className="form-group">
             <label>Leave Type</label>
             <select
@@ -89,16 +88,15 @@ const CreateLeaveForm = () => {
               onChange={(e) => setLeaveType(e.target.value)}
             >
               <option value="" disabled>
-                Please Select Leave Type here
+                Please Select Leave Type
               </option>
-              <option value="1">Emergency Leave (EL)</option>
-              <option value="2">Sick Leave (SL)</option>
-              <option value="3">Vacation Leave (VL)</option>
-              <option value="4">Leave Without Pay (LWOP)</option>
+              {leave_option.map((option) => (
+                <option key={option.leave_type_id} value={option.leave_type_id}>
+                  {option.name}
+                </option>
+              ))}
             </select>
           </div>
-
-          {/* Day Type */}
           <div className="form-group">
             <label>Day Type</label>
             <select
@@ -109,38 +107,30 @@ const CreateLeaveForm = () => {
               <option value="Half Day">Half Day</option>
             </select>
           </div>
-
-          {/* Start Date */}
           <div className="form-group">
             <label>Date Start</label>
             <input
               type="date"
               value={start_date}
-              min={today} // Restrict past dates
+              min={today}
               onChange={(e) => setStartDate(e.target.value)}
               onBlur={calculateDays}
             />
           </div>
-
-          {/* End Date */}
           <div className="form-group">
             <label>Date End</label>
             <input
               type="date"
               value={end_date}
-              min={start_date || today} // Restrict past dates and ensure end_date is not before start_date
+              min={start_date || today}
               onChange={(e) => setEndDate(e.target.value)}
               onBlur={calculateDays}
             />
           </div>
-
-          {/* Days */}
           <div className="form-group">
             <label>Days</label>
             <input type="number" value={total_days} readOnly />
           </div>
-
-          {/* Reason */}
           <div className="form-group">
             <label>Reason</label>
             <textarea
@@ -149,8 +139,6 @@ const CreateLeaveForm = () => {
               placeholder="Reason"
             ></textarea>
           </div>
-
-          {/* Form Actions */}
           <div className="form-actions">
             <button
               type="button"

@@ -3,6 +3,7 @@ import axios from "axios";
 import Sidebar from "./Sidebar";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
+import Header from "./Header"; 
 
 const ApplicationList = () => {
   const [recordsDetails, setRecordsDetails] = useState([]);
@@ -97,8 +98,11 @@ const ApplicationList = () => {
   return (
     <div className="dashboard-container">
       <Sidebar />
+      <Header/>
       <div className="main-content">
+        
         <div className="application-list-container">
+     
           <div className="application-header">
             <h2>List of Applications</h2>
             <button className="btn btn-primary" onClick={handleCreateNew}>

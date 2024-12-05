@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar"; // Import the Sidebar component
+import Header from "./Header"; 
 
 const DashboardPage = () => {
   const [dashboard, setDashboard] = useState("");
@@ -27,14 +28,9 @@ const DashboardPage = () => {
   return (
     <div className="dashboard-container">
       <Sidebar /> {/* Add Sidebar Component */}
+      <Header/>
       <div className="dashboard-content">
-        <div className="dashboard-header">
-          <h1>Leave Management System - Admin</h1>
-          <div className="user-info">
-            <span>vegeta</span>
-            <button className="logout-button">Logout</button>
-          </div>
-        </div>
+        
         <div className="main-content">
           <h2>Welcome to Leave Management System</h2>
           <div className="card-container">

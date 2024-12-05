@@ -1,57 +1,54 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
+import axios from "axios";
 import Sidebar from "./Sidebar";
+import Header from "./Header"; 
+
 
 const MyRecords = () => {
-  const [employeeDetails, setEmployeeDetails] = useState('');
+  const [employeeDetails, setEmployeeDetails] = useState("");
   const [leavecredit, setLeavecredit] = useState([]);
   const [RecordsDetails, setRecordsDetails] = useState([]);
 
-  let emp_id = localStorage.getItem('empid');
+  let emp_id = localStorage.getItem("empid");
 
   useEffect(() => {
-    axios.post("http://localhost:4000/myprofile", { emp_id })
-      .then(response => {
+    axios
+      .post("http://localhost:4000/myprofile", { emp_id })
+      .then((response) => {
         if (response.data.success === true) {
           setEmployeeDetails(response.data.user);
         }
       })
-      .catch(error => console.error("Error fetching employee details:", error));
+      .catch((error) =>
+        console.error("Error fetching employee details:", error)
+      );
 
-    axios.post("http://localhost:4000/leavecredit")
-      .then(response => {
+    axios
+      .post("http://localhost:4000/leavecredit")
+      .then((response) => {
         if (response.data.success === true) {
           setLeavecredit(response.data.data || []);
         }
       })
-      .catch(error => setLeavecredit([]));
+      .catch((error) => setLeavecredit([]));
 
-
-      
-    axios.post("http://localhost:4000/records", { emp_id })
-      .then(response => {
+    axios
+      .post("http://localhost:4000/records", { emp_id })
+      .then((response) => {
         if (response.data.success === true) {
           setRecordsDetails(response.data.data || []);
         }
       })
-      .catch(error => setRecordsDetails([]));
+      .catch((error) => setRecordsDetails([]));
   }, [emp_id]);
-
-
-
-
 
   return (
     <div className="dashboard-container">
       <Sidebar /> {/* Sidebar included */}
+      <Header/>
+      
       <div className="main-content">
-        <div className="dashboard-header">
-          <h1>Leave Management System - Admin</h1>
-          <div className="user-info">
-            <span>vegeta</span>
-            <button className="logout-button">Logout</button>
-          </div>
-        </div>
+   
         <div className="my-records-container">
           <h2>My Records</h2>
           <div className="employee-details">
@@ -63,10 +60,6 @@ const MyRecords = () => {
             <p><strong>Department:</strong> {employeeDetails?.department}</p>
             <p><strong>Designation:</strong> {employeeDetails?.designation}</p>
           </div>
-
-
-
-
 
           <div className="leave-records-row">
             <div className="leave-records-left">
@@ -91,11 +84,6 @@ const MyRecords = () => {
               </table>
             </div>
 
-
-
-
-
-
             <div className="leave-records-right">
               <h4>Records</h4>
               <table className="record-table">
@@ -117,17 +105,14 @@ const MyRecords = () => {
                     </tr>
                   ))}
                 </tbody>
-
-
-
-
-
               </table>
             </div>
           </div>
         </div>
         <footer className="dashboard-footer">
-          <h7>Copyright © 2024. All rights reserved. LMS (by: SBV Technologies) v1.0</h7>
+          <h7>
+            Copyright © 2024. All rights reserved. LMS (by: SBV Technologies) v1.0
+          </h7>
         </footer>
       </div>
     </div>
