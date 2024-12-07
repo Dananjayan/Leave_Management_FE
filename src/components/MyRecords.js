@@ -17,11 +17,17 @@ const MyRecords = () => {
       .then((response) => {
         if (response.data.success === true) {
           setEmployeeDetails(response.data.user);
+
+          console.log(response,"response")
+          console.log(response.data,"response.data")
+          console.log(response.data.user,"response.data.user")
+
+
         }
       })
       .catch((error) =>
         console.error("Error fetching employee details:", error)
-      );
+      ); 
 
     axios
       .post("http://localhost:4000/leavecredit")
@@ -86,7 +92,7 @@ const MyRecords = () => {
 
             <div className="leave-records-right">
               <h4>Records</h4>
-              <table className="record-table">
+              <table className="record-table"> 
                 <thead>
                   <tr>
                     <th>Leave Type</th>

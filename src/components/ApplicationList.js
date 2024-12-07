@@ -53,7 +53,7 @@ const ApplicationList = () => {
       
       axios
         .post("http://localhost:4000/remove_records", { records_id : records.records_id  })
-        .then((response) => {
+        .then((response) => { 
           if (response.data.success) {
             alert("Record deleted successfully!");
             axios
@@ -99,7 +99,7 @@ const ApplicationList = () => {
     <div className="dashboard-container">
       <Sidebar />
       <Header/>
-      <div className="main-content">
+      <div className="app-main-content">
         
         <div className="application-list-container">
      

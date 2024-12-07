@@ -1,63 +1,98 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+
 
 const MyAccount = () => {
-  const [dropdownVisible, setDropdownVisible] = useState(false); // Manage dropdown visibility
-  const [Profileinfo, setProfileinfo] = useState([]);
+  const [profileInfo, setProfileInfo] = useState({
+    firstname: "",
+    lastname: "",
+    username: "",
+    password: "", // Add password to manage it via state
+  });
 
-  // Toggle dropdown visibility
-  const toggleDropdown = () => {
-    setDropdownVisible(!dropdownVisible);
+  const emp_id = localStorage.getItem("empid");
+ 
+
+  useEffect(() => {
+    axios
+      .post("http://localhost:4000/myprofile", { emp_id })
+      .then((response) => {
+        if (response.data.success === true) {
+          setProfileInfo({
+            firstname: response.data.user.firstname || "",
+            lastname: response.data.user.lastname || "",
+            username: response.data.user.username || "",
+          });
+          console.log(response, "response");
+          console.log(response.data, "response.data");
+          console.log(response.data.user, "response.data.user");
+        }
+      })
+      .catch((error) =>
+        console.error("Error fetching employee details:", error)
+      );
+  }, [emp_id]);
+
+  // Function to handle update
+  const handleUpdate = (e) => {
+    e.preventDefault(); // Prevent default form submission
+    const { firstname, lastname, username, password } = profileInfo;
+
+    axios
+      .post("http://localhost:4000/updateinfo", {
+        emp_id,
+        firstname,
+        lastname,
+        username,
+        password,
+      })
+      .then((response) => {
+        if (response.data.success) {
+          alert("Record updated successfully!");
+        }
+      })
+      .catch(() =>
+        alert("Failed to update record. Please try again later.")
+      );
   };
-
-  // Close dropdown when focus is lost
-  const closeDropdown = () => {
-    setDropdownVisible(false);
-  };
-
-  // Note: Ensure you have the `axios` import and `emp_id` definition above this code for it to work.
-  axios
-    .post("http://localhost:4000/profileinfo", { emp_id })
-    .then((response) => {
-      if (response.data.success === true) {
-        setProfileinfo(response.data.data || []);
-      }
-    })
-    .catch((error) => setProfileinfo([]));
 
   return (
     <div className="my-account-container">
       <div className="main-content">
-        <div className="user-info">
-          {/* Dropdown trigger button */}
-          <button
-            className="user-button"
-            onClick={toggleDropdown}
-            onBlur={closeDropdown} // Close when focus is lost
-          >
-            vegeta
-          </button>
-
-          {/* Dropdown menu */}
-          {dropdownVisible && (
-            <div className="dropdown-menu">
-              <button className="dropdown-item">My Profile</button>
-              <button className="dropdown-item logout-button">Logout</button>
-            </div>
-          )}
-        </div>
         <div className="form-container">
-          <form className="form">
+          <form className="form" onSubmit={handleUpdate}>
             <div className="form-group">
               <label htmlFor="firstName">First Name</label>
-              <input type="text" id="firstName" defaultValue="prakash" />
+              <input
+                type="text"
+                id="firstName"
+                value={profileInfo.firstname}
+                onChange={(e) =>
+                  setProfileInfo({ ...profileInfo, firstname: e.target.value })
+                }
+              />
             </div>
             <div className="form-group">
               <label htmlFor="lastName">Last Name</label>
-              <input type="text" id="lastName" defaultValue="s" />
+              <input
+                type="text"
+                id="lastName"
+                value={profileInfo.lastname}
+                onChange={(e) =>
+                  setProfileInfo({ ...profileInfo, lastname: e.target.value })
+                }
+              />
             </div>
             <div className="form-group">
               <label htmlFor="username">Username</label>
-              <input type="text" id="username" defaultValue="prakash" />
+              <input
+                type="text"
+                id="username"
+                value={profileInfo.username}
+                onChange={(e) =>
+                  setProfileInfo({ ...profileInfo, username: e.target.value })
+                }
+              />
             </div>
             <div className="form-group">
               <label htmlFor="password">Password</label>
@@ -65,6 +100,10 @@ const MyAccount = () => {
                 type="password"
                 id="password"
                 placeholder="Leave blank if not changing"
+                value={profileInfo.password}
+                onChange={(e) =>
+                  setProfileInfo({ ...profileInfo, password: e.target.value })
+                }
               />
             </div>
             <div className="form-group">
@@ -72,7 +111,9 @@ const MyAccount = () => {
               <input type="file" id="avatar" />
             </div>
             <div className="form-group">
-              <button type="submit" className="btn">Update</button>
+              <button type="submit" className="btn">
+                Update
+              </button>
             </div>
           </form>
         </div>
